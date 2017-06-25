@@ -35,12 +35,12 @@
 ## 方法说明
 方法|含义
 ---|---
-- index/index/sg | 根据关键字去搜狗搜索匹配的公众号
-- index/index/sg_art | 根据关键字去搜狗搜索匹配的文章
-- index/index/autoStart | 根据任务量判断是否继续抓取还是休息
-- index/index/setCookie | 手动设置cookie信息，设置了cookie可以抓取10页以上
-- index/index/count | 统计当天总的抓取数量
-- index/index/keyword_count | 统计关键字当天抓取数量
+index/index/sg | 根据关键字去搜狗搜索匹配的公众号
+index/index/sg_art | 根据关键字去搜狗搜索匹配的文章
+index/index/autoStart | 根据任务量判断是否继续抓取还是休息
+index/index/setCookie | 手动设置cookie信息，设置了cookie可以抓取10页以上
+index/index/count | 统计当天总的抓取数量
+index/index/keyword_count | 统计关键字当天抓取数量
 
 # 赞助作者
 > 甲鱼说，咖啡是灵魂的饮料，买点咖啡。
