@@ -1,0 +1,6 @@
+{
+    "require": {
+        "jaeger/querylist": "^3.1",
+        "jaeger/querylist-ext-multi": "^1.0"
+    }
+}
