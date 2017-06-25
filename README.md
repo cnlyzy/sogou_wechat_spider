@@ -45,5 +45,5 @@
 # 赞助作者
 > 甲鱼说，咖啡是灵魂的饮料，买点咖啡。
 
-<img src="http://cdn.ctocn.cn/Alipay.jpg" width="250" height="350"/>
-<img src="http://cdn.ctocn.cn/wechatpay.png" width="250" height="350"/>
+<img src="https://raw.githubusercontent.com/cnlyzy/sogou_wechat_spider/master/sponsor/pay_zfb.jpg" width="250" height="350"/>
+<img src="https://raw.githubusercontent.com/cnlyzy/sogou_wechat_spider/master/sponsor/pay_wx.png" width="250" height="350"/>
