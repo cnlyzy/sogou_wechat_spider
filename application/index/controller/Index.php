@@ -406,20 +406,6 @@ class Index
     }
 
     /**
-     * 模拟浏览器UA
-     */
-    private function UA()
-    {
-        $userAgent = [
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',//Chrome
-            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',//win7 chrome
-            'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',//360
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0',//firefox
-        ];
-        return $userAgent[rand(0, 3)];
-    }
-
-    /**
      * 搜索文章用的关键字
      */
     private function getArtKeyword()
@@ -458,6 +444,20 @@ class Index
 
     }
 
+    /**
+     * 模拟浏览器UA
+     */
+    private function UA()
+    {
+        $userAgent = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36',//Chrome
+            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',//win7 chrome
+            'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.101 Safari/537.36',//360
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:54.0) Gecko/20100101 Firefox/54.0',//firefox
+        ];
+        return $userAgent[rand(0, 3)];
+    }
+    
     /**
      * 设置/更新cookie
      */

@@ -13,7 +13,7 @@
 ## 基本环境
 - PHP   5.6+  
 - MySql 5.6+
-- Redis 3+
+- Redis 3.2+
     
 ## 基本配置
 - 导入/sql/wechat_data.sql到数据库中,并在wd_task_keywords表中添加需要采集的公众号关键字
@@ -42,8 +42,11 @@ index/index/setCookie | 手动设置cookie信息，设置了cookie可以抓取10
 index/index/count | 统计当天总的抓取数量
 index/index/keyword_count | 统计关键字当天抓取数量
 
+# 采集效果
+>  1000 个关键词; 不设置cookie; 代理单次并发5个请求。不间断运行,每天可采集约10万公众号。
+
 # 赞助作者
-> 甲鱼说，咖啡是灵魂的饮料，买点咖啡。
+> 若项目对您有帮助,欢迎您请我喝杯咖啡。
 
 <img src="https://raw.githubusercontent.com/cnlyzy/sogou_wechat_spider/master/sponsor/pay_zfb.jpg" width="250" height="350"/>
 <img src="https://raw.githubusercontent.com/cnlyzy/sogou_wechat_spider/master/sponsor/pay_wx.png" width="250" height="350"/>
