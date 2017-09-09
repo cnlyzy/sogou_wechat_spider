@@ -3,11 +3,27 @@
 namespace app\index\controller;
 
 use QL\QueryList;
+use think\Config;
 use think\Db;
 use think\Request;
 
 class Index
 {
+    function __construct()
+    {
+        $this->redis = new \Redis();
+        $this->redis->connect('127.0.0.1', 6379);
+    }
+
+    /**
+     * index
+     */
+    public function index()
+    {
+        dump($this->UA());
+        echo 'sogou_wechat_spider is running';
+    }
+
     /**
      * 搜狗公众号采集
      */
@@ -49,6 +65,10 @@ class Index
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_AUTOREFERER => true,
                         CURLOPT_TIMEOUT => 10,
+                        CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                        CURLOPT_PROXY => Config::get('proxy.PROXY_URL'),
+                        CURLOPT_PROXYAUTH => CURLAUTH_BASIC,
+                        CURLOPT_PROXYUSERPWD => Config::get('proxy.PROXY_USERPWD'),
                         CURLOPT_USERAGENT => $this->UA(),
                         CURLOPT_COOKIE => $cookie,
                     ),
@@ -73,16 +93,12 @@ class Index
                         echo date('Y-m-d H:i:s', time()) . " 出现验证码了\r\n";
                         die();
                     }
-//                dump($getHtml);
                     global $all_url;
                     $article_url = array_column($data, 'article_url');//转一维数组
                     $all_url[] = $article_url;
                 }
             ]);
             $arrUrl = $GLOBALS['all_url'];
-//        dump($arrUrl);
-            $redis = new \Redis();
-            $redis->connect('127.0.0.1', 6379);
             foreach ($arrUrl as $value) {
                 foreach ($value as $v) {
                     $urlInfo = [
@@ -92,7 +108,7 @@ class Index
                     ];
                     $jsonUrlInfo = json_encode($urlInfo);
                     try {
-                        $redis->lPush('sogou_task_url', $jsonUrlInfo);
+                        $this->redis->lPush('sogou_task_url', $jsonUrlInfo);
                     } catch (Exception $e) {
                         echo $e->getMessage();
                     }
@@ -106,6 +122,8 @@ class Index
             echo date('Y-m-d H:i:s', time()) . " mp stop:task to much\r\n";
             $this->mps();
         }
+
+
     }
 
     /**
@@ -153,6 +171,10 @@ class Index
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_AUTOREFERER => true,
                         CURLOPT_TIMEOUT => 10,
+                        CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                        CURLOPT_PROXY => Config::get('proxy.PROXY_URL'),
+                        CURLOPT_PROXYAUTH => CURLAUTH_BASIC,
+                        CURLOPT_PROXYUSERPWD => Config::get('proxy.PROXY_USERPWD'),
                         CURLOPT_USERAGENT => $this->UA(),
                         CURLOPT_COOKIE => $cookie,
                     ),
@@ -177,16 +199,12 @@ class Index
                         echo date('Y-m-d H:i:s', time()) . " 出现验证码了\r\n";
                         die();
                     }
-//                dump($getHtml);
                     global $all_art_url;
                     $article_url = array_column($data, 'article_url');//转一维数组
                     $all_art_url[] = $article_url;
                 }
             ]);
             $arrUrl = $GLOBALS['all_art_url'];
-//        dump($arrUrl);
-            $redis = new \Redis();
-            $redis->connect('127.0.0.1', 6379);
             foreach ($arrUrl as $value) {
                 foreach ($value as $v) {
                     $urlInfo = [
@@ -196,7 +214,7 @@ class Index
                     ];
                     $jsonUrlInfo = json_encode($urlInfo);
                     try {
-                        $redis->lPush('sogou_task_url', $jsonUrlInfo);
+                        $this->redis->lPush('sogou_task_url', $jsonUrlInfo);
                     } catch (Exception $e) {
                         echo $e->getMessage();
                     }
@@ -217,11 +235,9 @@ class Index
      */
     public function mps()
     {
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1', 6379);
         try {
             for ($i = 1; $i <= 5; $i++) {
-                $sogou_task_url[] = json_decode($redis->rPop('sogou_task_url'), true);
+                $sogou_task_url[] = json_decode($this->redis->rPop('sogou_task_url'), true);
             }
             foreach ($sogou_task_url as $v) {
                 $keyword_flag[$v['u']] = $v;
@@ -242,6 +258,10 @@ class Index
                     CURLOPT_FOLLOWLOCATION => true,
                     CURLOPT_AUTOREFERER => true,
                     CURLOPT_TIMEOUT => 10,
+                    CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+                    CURLOPT_PROXY => Config::get('proxy.PROXY_URL'),
+                    CURLOPT_PROXYAUTH => CURLAUTH_BASIC,
+                    CURLOPT_PROXYUSERPWD => Config::get('proxy.PROXY_USERPWD'),
                     CURLOPT_USERAGENT => $this->UA(),
                 ),
                 'maxThread' => 5,
@@ -339,6 +359,10 @@ class Index
             CURLOPT_TIMEOUT => 5,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+            CURLOPT_PROXY => Config::get('proxy.PROXY_URL'),
+            CURLOPT_PROXYAUTH => CURLAUTH_BASIC,
+            CURLOPT_PROXYUSERPWD => Config::get('proxy.PROXY_USERPWD'),
             CURLOPT_USERAGENT => $this->UA(),
         ));
         $response = curl_exec($curl);
@@ -362,6 +386,7 @@ class Index
             } else {
                 cache('sogou_art_keyword_pages', $autoPage, 60 * 60 * 24);
             }
+
         }
 
     }
@@ -371,9 +396,6 @@ class Index
      */
     private function getKeyword()
     {
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1', 6379);
-
         $sogou_keyword_db = cache('sogou_keyword_db');
         if (empty($sogou_keyword_db)) {
             $result = Db::name('task_keywords')
@@ -383,7 +405,7 @@ class Index
             cache('sogou_keyword_db', $result, 60 * 60 * 24 * 30);
             try {
                 foreach ($result as $value) {
-                    $redis->lPush('keyword', $value['keyword']);
+                    $this->redis->lPush('keyword', $value['keyword']);
                 }
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -391,7 +413,7 @@ class Index
         }
 
         try {
-            $sogouKeyword = $redis->rPop('keyword');
+            $sogouKeyword = $this->redis->rPop('keyword');
             if (empty($sogouKeyword)) {
                 cache('sogou_keyword_db', 0, 60 * 60 * 24 * 30);
                 die(date('Y-m-d H:i:s', time()) . " 关键词空 \r\n");
@@ -399,10 +421,12 @@ class Index
                 $query = urlencode($sogouKeyword);
                 cache('sogou_keyword', $query, 60 * 60 * 24);
                 cache('sogou_keyword_raw', $sogouKeyword, 60 * 60 * 24);
+
             }
         } catch (Exception $e) {
             echo $e->getMessage();
         }
+
     }
 
     /**
@@ -410,8 +434,6 @@ class Index
      */
     private function getArtKeyword()
     {
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1', 6379);
         $sogou_keyword_db = cache('sogou_art_keyword_db');
         if (empty($sogou_keyword_db)) {
             $result = Db::name('task_keywords')
@@ -421,7 +443,7 @@ class Index
             cache('sogou_art_keyword_db', $result, 60 * 60 * 24 * 30);
             try {
                 foreach ($result as $value) {
-                    $redis->lPush('art_keyword', $value['keyword']);
+                    $this->redis->lPush('art_keyword', $value['keyword']);
                 }
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -429,7 +451,7 @@ class Index
         }
 
         try {
-            $sogouKeyword = $redis->rPop('art_keyword');
+            $sogouKeyword = $this->redis->rPop('art_keyword');
             if (empty($sogouKeyword)) {
                 cache('sogou_art_keyword_db', 0, 60 * 60 * 24 * 30);
                 die(date('Y-m-d H:i:s', time()) . " 关键词空 \r\n");
@@ -457,7 +479,7 @@ class Index
         ];
         return $userAgent[rand(0, 3)];
     }
-    
+
     /**
      * 设置/更新cookie
      */
@@ -481,9 +503,7 @@ class Index
      */
     public function autoStart()
     {
-        $redis = new \Redis();
-        $redis->connect('127.0.0.1', 6379);
-        $q_num = $redis->lLen("sogou_task_url");
+        $q_num = $this->redis->lLen("sogou_task_url");
         $flag = cache('sogou_task_status');
         if ($flag != 'stop') {
             if ($q_num < 10000) {
