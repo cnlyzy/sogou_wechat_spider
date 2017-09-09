@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'think\\composer\\' => array($vendorDir . '/topthink/think-installer/src'),
+    'think\\' => array($baseDir . '/thinkphp/library/think'),
     'QL\\Ext\\Lib\\' => array($vendorDir . '/jaeger/curlmulti'),
     'QL\\Ext\\' => array($vendorDir . '/jaeger/querylist-ext-aquery', $vendorDir . '/jaeger/querylist-ext-multi'),
     'QL\\' => array($vendorDir . '/jaeger/querylist'),

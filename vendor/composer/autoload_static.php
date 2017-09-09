@@ -7,6 +7,11 @@ namespace Composer\Autoload;
 class ComposerStaticInit5062e9a5165454ee34415153ddbb7fc6
 {
     public static $prefixLengthsPsr4 = array (
+        't' => 
+        array (
+            'think\\composer\\' => 15,
+            'think\\' => 6,
+        ),
         'Q' => 
         array (
             'QL\\Ext\\Lib\\' => 11,
@@ -16,6 +21,14 @@ class ComposerStaticInit5062e9a5165454ee34415153ddbb7fc6
     );
 
     public static $prefixDirsPsr4 = array (
+        'think\\composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-installer/src',
+        ),
+        'think\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/thinkphp/library/think',
+        ),
         'QL\\Ext\\Lib\\' => 
         array (
             0 => __DIR__ . '/..' . '/jaeger/curlmulti',
